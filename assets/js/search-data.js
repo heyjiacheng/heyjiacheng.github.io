@@ -440,16 +440,14 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
+            },},{id: "news-defended-my-master-s-thesis-on-gaussian-splatting-for-language-driven-manipulation-at-kth-tada",
+          title: 'Defended my Master’s thesis on Gaussian Splatting for language-driven manipulation at KTH. :tada:...',
           description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
+          section: "News",},{id: "news-started-work-on-a-sim-to-real-evaluation-suite-for-diffusion-vla-policies-see-test-any-policy",
+          title: 'Started work on a sim-to-real evaluation suite for diffusion / VLA policies —...',
           description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_2/";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
+          section: "News",},{id: "news-released-a-tiny-multibody-dynamics-engine-in-rust-crba-rne-rk4-repo-mujoco-hinge-chain",
+          title: 'Released a tiny multibody dynamics engine in Rust (CRBA + RNE + RK4)...',
           description: "",
           section: "News",},{id: "projects-project-1",
           title: 'project 1',
@@ -511,28 +509,21 @@ ninja.data = [{
         title: 'CV',
         section: 'Socials',
         handler: () => {
-          window.open("/assets/pdf/example_pdf.pdf", "_blank");
+          window.open("/assets/pdf/cv.pdf", "_blank");
         },
       },{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+          window.open("mailto:%78%75%6A%69%61%63%68%65%6E%67%30%34%30%31%30%38@%67%6D%61%69%6C.%63%6F%6D", "_blank");
         },
       },{
-        id: 'social-inspire',
-        title: 'Inspire HEP',
+        id: 'social-github',
+        title: 'GitHub',
         section: 'Socials',
         handler: () => {
-          window.open("https://inspirehep.net/authors/1010907", "_blank");
-        },
-      },{
-        id: 'social-rss',
-        title: 'RSS Feed',
-        section: 'Socials',
-        handler: () => {
-          window.open("/feed.xml", "_blank");
+          window.open("https://github.com/heyjiacheng", "_blank");
         },
       },{
         id: 'social-scholar',
@@ -542,11 +533,11 @@ ninja.data = [{
           window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
         },
       },{
-        id: 'social-custom_social',
-        title: 'Custom_social',
+        id: 'social-rss',
+        title: 'RSS Feed',
         section: 'Socials',
         handler: () => {
-          window.open("https://www.alberteinstein.com/", "_blank");
+          window.open("/feed.xml", "_blank");
         },
       },{
       id: 'light-theme',
