@@ -29,4 +29,4 @@ Hi! I'm Jiacheng, a Master's student in Applied Mathematics (Scientific Computin
 
 My research interest is **robot learning** — in particular, building scalable learning systems for embodied agents and bringing physics-based priors into manipulation policies. My recent work spans 3D Gaussian Splatting for language-driven manipulation (Master's thesis), sim-to-real evaluation for diffusion / VLA policies, and a from-scratch rigid-body dynamics engine in Rust.
 
-I'm always happy to chat about robotics, manipulation, and the messy bits where simulation meets the real world. The best way to reach me is by [email](mailto:xujiacheng040108@gmail.com) — or take a look at my [code](https://github.com/heyjiacheng) and [CV](/cv/).
+I'm always happy to chat about robotics, manipulation, and the messy bits where simulation meets the real world. The best way to reach me is by [email](mailto:xujiacheng040108@gmail.com) — or take a look at my [code](https://github.com/heyjiacheng), [CV](/cv/), and recent [progress report on Unitree G1 whole-body teleoperation](/assets/report/Progress_Report.html).

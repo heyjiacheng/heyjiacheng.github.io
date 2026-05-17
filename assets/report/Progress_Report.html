@@ -1,0 +1,1017 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unitree G1 Whole-body Teleoperation — Progress Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+<style>
+  :root {
+    --paper: #f4f1ea;
+    --paper-2: #ece8df;
+    --ink: #181816;
+    --ink-soft: #3a3a36;
+    --ink-mute: #6e6b62;
+    --rule: #c9c3b4;
+    --rule-soft: #ddd6c6;
+    --card: #fbf9f3;
+    --card-shadow: 0 1px 0 #00000008, 0 12px 28px -20px #2b261b22;
+
+    --st-done: #3f7a3c;        /* green  – completed */
+    --st-done-bg: #e5ecd9;
+    --st-current: #2b5c8a;     /* blue   – current direction */
+    --st-current-bg: #dbe7f1;
+    --st-decision: #9a6a13;    /* yellow – decision / transition */
+    --st-decision-bg: #f3e6c1;
+    --st-risk: #a23a2b;        /* red    – hardware risk */
+    --st-risk-bg: #f1d8d2;
+    --st-active: #1a4a3e;      /* teal-ish – collecting */
+    --st-active-bg: #d6e5dc;
+
+    --rail-x: 26px;            /* x of the axis line, relative to .rail */
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  .serif { font-family: "Source Serif 4", Georgia, serif; }
+
+  /* ───── Layout shell ───── */
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 48px 120px;
+  }
+
+  /* ───── Document header ───── */
+  .doc-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 8px;
+  }
+  .doc-head .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+  .doc-head h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .doc-head h1 em {
+    font-style: normal;
+    color: var(--ink-soft);
+  }
+  .doc-head .lede {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0;
+  }
+  .doc-head .meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--ink-mute);
+    text-align: right;
+    min-width: 180px;
+  }
+  .doc-head .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ───── Legend strip ───── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 26px;
+    margin: 28px 0 56px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .legend .li { display: inline-flex; align-items: center; gap: 8px; }
+  .legend .dot {
+    width: 9px; height: 9px; border-radius: 999px;
+    box-shadow: inset 0 0 0 2px var(--paper);
+  }
+
+  /* ───── Timeline ───── */
+  .timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+  }
+  /* the rail column */
+  .rail {
+    position: relative;
+  }
+  /* the actual axis line spans the whole timeline height */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: calc(200px - 36px); /* tail end of rail col, slightly inset */
+    top: 8px;
+    bottom: 0;
+    width: 1px;
+    background:
+      linear-gradient(180deg, var(--rule) 0%, var(--rule) 96%, transparent 100%);
+    z-index: 0;
+  }
+
+  .row {
+    display: contents;
+  }
+
+  /* left side: week label */
+  .axis {
+    position: relative;
+    padding: 32px 48px 0 0;
+    text-align: right;
+  }
+  .axis .week-num {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .axis .week-range,
+  .axis .week-tag { display: none; }
+
+  /* the node dot */
+  .node {
+    position: absolute;
+    right: -41px;   /* sit on the axis line */
+    top: 40px;
+    width: 11px; height: 11px;
+    border-radius: 999px;
+    background: var(--paper);
+    box-shadow: 0 0 0 1.5px var(--ink);
+    z-index: 2;
+  }
+  .node.is-done    { background: var(--st-done); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--st-done); }
+  .node.is-current { background: var(--st-current); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--st-current); }
+  .node.is-decision{ background: var(--st-decision); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--st-decision); }
+  .node.is-risk    { background: var(--st-risk); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--st-risk); }
+  .node.is-active  { background: var(--st-active); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--st-active); }
+  .node.is-goal {
+    width: 17px; height: 17px;
+    background: var(--ink);
+    box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--ink);
+    top: 36px;
+    right: -44px;
+  }
+  .node.is-summary {
+    width: 14px; height: 14px;
+    background: var(--paper);
+    box-shadow: 0 0 0 1.5px var(--ink), inset 0 0 0 3px var(--ink);
+    top: 38px;
+    right: -42px;
+  }
+
+  /* connector tick */
+  .axis::after {
+    content: "";
+    position: absolute;
+    right: -27px;
+    top: 45px;
+    width: 24px;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ───── Card ───── */
+  .card-wrap {
+    padding: 24px 0 56px 36px;
+    position: relative;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule-soft);
+    border-radius: 4px;
+    padding: 28px 30px 26px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin: 0;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .card-title em { font-style: normal; color: var(--ink-soft); font-weight: 400; }
+
+  /* status badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 9px 5px 8px;
+    border-radius: 3px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .badge .b-dot { width: 7px; height: 7px; border-radius: 999px; }
+  .badge.is-done     { color: var(--st-done);     background: var(--st-done-bg); }
+  .badge.is-done .b-dot     { background: var(--st-done); }
+  .badge.is-current  { color: var(--st-current);  background: var(--st-current-bg); }
+  .badge.is-current .b-dot  { background: var(--st-current); }
+  .badge.is-decision { color: var(--st-decision); background: var(--st-decision-bg); }
+  .badge.is-decision .b-dot { background: var(--st-decision); }
+  .badge.is-risk     { color: var(--st-risk);     background: var(--st-risk-bg); }
+  .badge.is-risk .b-dot     { background: var(--st-risk); }
+  .badge.is-active   { color: var(--st-active);   background: var(--st-active-bg); }
+  .badge.is-active .b-dot   { background: var(--st-active); }
+
+  /* points list */
+  .points {
+    margin: 8px 0 18px;
+    padding: 0;
+    list-style: none;
+  }
+  .points li {
+    position: relative;
+    padding-left: 18px;
+    margin: 6px 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  .points li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 8px; height: 1px;
+    background: var(--ink-mute);
+  }
+  .points li b { color: var(--ink); font-weight: 600; }
+
+  /* media block */
+  .media {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+  }
+  .media.two   { grid-template-columns: 1fr 1fr; }
+  .media.split { grid-template-columns: 1fr 1.05fr; }
+  .media figure { margin: 0; }
+  .media .frame {
+    position: relative;
+    background: #1a1a18;
+    border-radius: 3px;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border: 1px solid #00000010;
+  }
+  .media .frame.portrait { aspect-ratio: 4 / 6; }
+  .media .frame.tall     { aspect-ratio: 10 / 13; }
+  .media .frame.wide     { aspect-ratio: 21 / 9; }
+  .media img, .media video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .media .frame.contain img,
+  .media .frame.contain video { object-fit: contain; background: #f4f1ea; }
+  .media figcaption {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    margin-top: 8px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .media figcaption .tag {
+    display: inline-block;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 1px 5px;
+    font-size: 9.5px;
+    color: var(--ink-soft);
+  }
+
+  /* spec / decision / risk blocks */
+  .block {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 3px;
+    border: 1px solid var(--rule-soft);
+    background: #00000004;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .block .b-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .block.is-method {
+    background: #00000005;
+  }
+  .block.is-method .kv {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 8px 18px;
+    align-items: baseline;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    margin: 4px 0;
+  }
+  .block.is-method .k {
+    color: var(--ink-mute);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .block.is-method .v { color: var(--ink); }
+
+  .block.is-decision {
+    background: #fffaeb;
+    border-color: #e8d8a6;
+    border-left: 3px solid var(--st-decision);
+  }
+  .block.is-decision .b-label { color: var(--st-decision); }
+
+  .block.is-risk {
+    background: #fbeae5;
+    border-color: #e8c1b8;
+    border-left: 3px solid var(--st-risk);
+  }
+  .block.is-risk .b-label { color: var(--st-risk); }
+
+  .block.is-note {
+    background: #eaf2eb;
+    border-color: #c4d8c6;
+    border-left: 3px solid var(--st-done);
+  }
+  .block.is-note .b-label { color: var(--st-done); }
+
+  /* comparison table */
+  .compare {
+    margin-top: 18px;
+    border: 1px solid var(--rule-soft);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #00000004;
+  }
+  .compare-head, .compare-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    align-items: center;
+  }
+  .compare-head {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: #00000007;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .compare-head > div, .compare-row > div {
+    padding: 11px 14px;
+  }
+  .compare-head .winner {
+    color: var(--ink-soft);
+  }
+  .compare-row {
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 13.5px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row .dim {
+    color: var(--ink-soft);
+  }
+  .compare-row .val {
+    font-family: "IBM Plex Sans", sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .compare-row .meter {
+    flex: 1;
+    height: 4px;
+    background: #00000010;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .compare-row .meter > i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--ink-soft);
+    border-radius: 999px;
+  }
+  .compare-row .meter.hi > i { width: 88%; background: var(--st-done); }
+  .compare-row .meter.md > i { width: 62%; background: var(--st-current); }
+  .compare-row .meter.lo > i { width: 32%; background: var(--st-risk); }
+  .compare-row .lbl { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--ink-mute); letter-spacing: 0.08em; text-transform: uppercase; min-width: 46px; text-align: right; }
+
+  /* mini pipeline diagram (goal card) */
+  .pipeline {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    align-items: stretch;
+  }
+  .pipe-step {
+    position: relative;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 14px 14px 12px;
+    background: #faf7ef;
+  }
+  .pipe-step .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .pipe-step .lbl {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 15px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .pipe-step + .pipe-step::before {
+    content: "→";
+    position: absolute;
+    left: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    color: var(--ink-mute);
+  }
+
+  /* summary list — different feel for last card */
+  .summary-list {
+    counter-reset: sum;
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+  .summary-list li {
+    counter-increment: sum;
+    position: relative;
+    padding: 14px 0 14px 44px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .summary-list li:first-child { border-top: none; }
+  .summary-list li::before {
+    content: counter(sum, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 16px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .summary-list li b { color: var(--ink); font-weight: 600; }
+
+  /* small kbd-like inline thing */
+  code {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.88em;
+    background: #00000008;
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--ink-soft);
+  }
+
+  /* end cap on the rail */
+  .rail-cap {
+    position: absolute;
+    left: calc(200px - 38px);
+    bottom: -10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: var(--paper);
+    padding: 4px 6px 4px 8px;
+  }
+
+  /* responsive */
+  @media (max-width: 820px) {
+    .page { padding: 32px 20px 80px; }
+    .doc-head { grid-template-columns: 1fr; }
+    .doc-head .meta { text-align: left; }
+    .doc-head h1 { font-size: 32px; }
+    .timeline { grid-template-columns: 80px 1fr; }
+    .timeline::before { left: calc(80px - 24px); }
+    .axis { padding: 26px 24px 0 0; }
+    .axis::after { right: -15px; width: 14px; }
+    .node { right: -28px; }
+    .node.is-goal { right: -30px; }
+    .node.is-summary { right: -29px; }
+    .axis .week-range { font-size: 16px; }
+    .card-wrap { padding-left: 22px; }
+    .card { padding: 22px 20px; }
+    .card-title { font-size: 20px; }
+    .media.two, .media.split { grid-template-columns: 1fr; }
+    .pipeline { grid-template-columns: 1fr 1fr; }
+    .pipe-step + .pipe-step::before { display: none; }
+    .compare-head, .compare-row { grid-template-columns: 1.1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- ─────────── DOCUMENT HEAD ─────────── -->
+    <header class="doc-head">
+      <div>
+        <div class="eyebrow">Progress Report · KTH RPL</div>
+        <h1>Unitree&nbsp;G1 — Whole-body<br/><em>Teleoperation &amp; Data Collection</em></h1>
+      </div>
+      <div class="meta">
+        <div><b>Platform</b><br/>Unitree G1 (humanoid)</div>
+        <div style="margin-top:10px"><b>Window</b><br/>Weeks 1–10</div>
+        <div style="margin-top:10px"><b>Status</b><br/>Data collection · ongoing</div>
+      </div>
+    </header>
+
+    <!-- ─────────── LEGEND ─────────── -->
+    <div class="legend">
+      <span class="li"><span class="dot" style="background:var(--st-done)"></span>Completed</span>
+      <span class="li"><span class="dot" style="background:var(--st-current)"></span>Current direction</span>
+      <span class="li"><span class="dot" style="background:var(--st-decision)"></span>Decision / transition</span>
+      <span class="li"><span class="dot" style="background:var(--st-risk)"></span>Hardware risk</span>
+      <span class="li"><span class="dot" style="background:var(--st-active)"></span>Data collection</span>
+    </div>
+
+    <!-- ─────────── TIMELINE ─────────── -->
+    <section class="timeline">
+
+      <!-- ============ GOAL ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Goal</span>
+          <span class="week-range">Goal</span>
+          <span class="week-tag">project north star</span>
+          <span class="node is-goal"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Humanoid <em>whole-body</em> training data on G1</h2>
+              <span class="badge is-done"><span class="b-dot"></span>Objective</span>
+            </header>
+            <p style="margin:0 0 6px; color:var(--ink-soft); font-size:15px; max-width:60ch;">
+              Collect coordinated locomotion + manipulation demonstrations on the Unitree G1
+              to support future whole-body policy / VLA training.
+            </p>
+
+            <div class="pipeline" aria-label="Data pipeline">
+              <div class="pipe-step">
+                <div class="num">01 · Input</div>
+                <div class="lbl">Human VR motion</div>
+              </div>
+              <div class="pipe-step">
+                <div class="num">02 · Control</div>
+                <div class="lbl">Whole-body controller</div>
+              </div>
+              <div class="pipe-step">
+                <div class="num">03 · Capture</div>
+                <div class="lbl">Demonstration data</div>
+              </div>
+              <div class="pipe-step">
+                <div class="num">04 · Output</div>
+                <div class="lbl">VLA / policy training</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 1–2 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 1–2</span>
+          <span class="week-range">Upper-body</span>
+          <span class="week-tag">validation · sim &amp; real</span>
+          <span class="node is-done"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Upper-body VR teleoperation is working</h2>
+              <span class="badge is-done"><span class="b-dot"></span>Done</span>
+            </header>
+            <ul class="points">
+              <li>Deployed upper-body teleoperation using <b>Meta Quest 2</b>.</li>
+              <li>Validated in <b>simulation and on the real G1</b>.</li>
+            </ul>
+            <div class="media split">
+              <figure>
+                <div class="frame contain"><img src="assets/week_1_2/upper_body_sim.png" alt="Upper-body teleoperation in simulation"/></div>
+                <figcaption>Simulation · upper-body tracking</figcaption>
+              </figure>
+              <figure>
+                <div class="frame tall"><img src="assets/week_1_2/upper_body_real.gif" alt="Upper-body teleoperation on real G1"/></div>
+                <figcaption>Real G1 · Meta Quest 2 input</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 3 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 3</span>
+          <span class="week-range">VLA</span>
+          <span class="week-tag">scope expansion</span>
+          <span class="node is-decision"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Extend VLA to <em>humanoid</em></h2>
+              <span class="badge is-decision"><span class="b-dot"></span>Start</span>
+            </header>
+            <ul class="points">
+              <li>Over the past two years, <b>VLA models</b> (such as the π-series) have shown promising results on both single-arm and dual-arm manipulation tasks.</li>
+              <li>A growing research direction is to extend VLA from arm-centric manipulation to <b>humanoid whole-body control</b> (such as GR00T).</li>
+            </ul>
+            <div class="media">
+              <figure>
+                <div class="frame wide">
+                  <video src="assets/week_3/sonic_reference.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>A humanoid VLA using SONIC as controller</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 4 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 4</span>
+          <span class="week-range">Pico 4</span>
+          <span class="week-tag">hardware switch</span>
+          <span class="node is-done"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">New VR device for <em>teleoperation</em></h2>
+              <span class="badge is-done"><span class="b-dot"></span>Purchase done</span>
+            </header>
+            <ul class="points">
+              <li>Meta Quest covered hands &amp; head, but has <b>no official leg motion tracker</b>.</li>
+              <li>Switched to <b>Pico 4 + body trackers</b> so whole-body teleoperation has full-pose input.</li>
+            </ul>
+            <div class="media">
+              <figure>
+                <div class="frame wide contain"><img src="assets/week_4/pico4_setup.png" alt="Pico 4 VR setup"/></div>
+                <figcaption>Pico 4</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 5–6 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 5–6</span>
+          <span class="week-range">Option A</span>
+          <span class="week-tag">IK upper · RL lower</span>
+          <span class="node is-risk"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Option A — <em>IK upper body + RL lower body</em></h2>
+              <span class="badge is-risk"><span class="b-dot"></span>Hardware risk</span>
+            </header>
+
+            <div class="block is-method">
+              <span class="b-label">Method</span>
+              <div class="kv"><span class="k">Upper body</span><span class="v">IK-based joint-position control</span></div>
+              <div class="kv"><span class="k">Lower body</span><span class="v">pretrained RL locomotion policy</span></div>
+            </div>
+
+           <div class="block">
+              <span class="b-label">Control objectives</span>
+              <div style="margin-top:6px">
+                AMO uses upper-body IK for sparse target tracking and a lower-body policy for locomotion:
+                $$
+                (\mathbf{q}^{u}, \mathbf{c}) = \mathrm{IK}(\mathbf{x}^{\star}),
+                \qquad
+                \mathbf{a}^{l} = \pi^{l}(\mathbf{o}, \mathbf{v}^{\star}, \mathbf{c}).
+                $$
+                Here, \(\mathbf{x}^{\star}\) are head/wrist target poses, \(\mathbf{q}^{u}\) upper-body joints, \(\mathbf{c}\) torso/height commands, \(\mathbf{o}\) proprioception, \(\mathbf{v}^{\star}\) target velocity, \(\pi^{l}\) the lower-body policy, and \(\mathbf{a}^{l}\) lower-body actions.
+              </div>
+            </div>
+
+            <ul class="points">
+              <li>Under upper-body manipulation, the lower body <b>struggled to maintain balance</b>.</li>
+              <li><b>Robot damage</b> occurred during data collection runs.</li>
+            </ul>
+
+            <div class="media two">
+              <figure>
+                <div class="frame"><img src="assets/week_5_6/ik_demo.png" alt="IK + RL demonstration"/></div>
+                <figcaption>Decouple whole-body control</figcaption>
+              </figure>
+              <figure>
+                <div class="frame"><img src="assets/week_5_6/robot_damage.jpg" alt="Hardware damage"/></div>
+                <figcaption>Hardware damage during teleoperation</figcaption>
+              </figure>
+            </div>
+
+            <div class="block is-note" style="margin-top:18px">
+              <span class="b-label">Trade-off observed</span>
+              <div><b style="color:var(--ink)">+ IK advantage</b> — better hand accuracy at the end-effector.<br/>
+              <b style="color:var(--ink)">− IK problem</b> — unnatural motion and poor stability during manipulation.</div>
+            </div>
+
+            <div class="block is-decision">
+              <span class="b-label">Decision</span>
+              Not suitable as the <b>main</b> data-collection method.
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 7–8 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 7–8</span>
+          <span class="week-range">Option B</span>
+          <span class="week-tag">SONIC deployment</span>
+          <span class="node is-current"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Option B — <em>One policy for whole-body</em></h2>
+              <span class="badge is-current"><span class="b-dot"></span>Current main direction</span>
+            </header>
+
+            <div class="block is-method">
+              <span class="b-label">Method</span>
+              <div class="kv"><span class="k">Policy</span><span class="v">SONIC · pretrained whole-body motion tracking</span></div>
+              <div class="kv"><span class="k">Input</span><span class="v">VR device motion / VLA command</span></div>
+              <div class="kv"><span class="k">Output</span><span class="v">coordinated full-body G1 motion</span></div>
+            </div>
+
+            <div class="block">
+              <span class="b-label">Training objective</span>
+              <div style="margin-top:6px">
+                $$
+                \mathcal{L}_{\text{SONIC}}
+                =
+                \mathcal{L}_{\text{RL}}
+                +
+                \mathcal{L}_{\text{recon}}
+                +
+                \mathcal{L}_{\text{token}}
+                +
+                \mathcal{L}_{\text{cycle}},
+                $$
+                where $\mathcal{L}_{\text{RL}}$ is the PPO surrogate that trains physically stable motion tracking, $\mathcal{L}_{\text{recon}}$ reconstructs robot motion from the learned tokens, $\mathcal{L}_{\text{token}}$ aligns human and robot motion tokens, and $\mathcal{L}_{\text{cycle}}$ enforces cross-embodiment consistency.
+              </div>
+            </div>
+
+            <ul class="points">
+              <li>Produces <b>more natural</b> whole-body motion than IK.</li>
+              <li><b>Better balance</b> during manipulation.</li>
+              <li>Main limitation: hand / end-effector accuracy is <b>lower than IK</b>.</li>
+            </ul>
+
+            <div class="media" style="grid-template-columns: 1fr 1fr 1fr;">
+              <figure>
+                <div class="frame contain" style="aspect-ratio: 9 / 16;">
+                  <video src="assets/week_7_8/sonic_deploy_1.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>SONIC deployment · run 1</figcaption>
+              </figure>
+              <figure>
+                <div class="frame contain" style="aspect-ratio: 9 / 16;">
+                  <video src="assets/week_7_8/sonic_deploy_2.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>SONIC deployment · run 2</figcaption>
+              </figure>
+              <figure>
+                <div class="frame contain" style="aspect-ratio: 9 / 16;">
+                  <video src="assets/week_7_8/sonic_deploy_3.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>SONIC deployment · run 3</figcaption>
+              </figure>
+            </div>
+
+            <!-- comparison table -->
+            <div class="compare" role="table" aria-label="IK+RL vs SONIC comparison">
+              <div class="compare-head" role="row">
+                <div role="columnheader">Dimension</div>
+                <div role="columnheader">IK + RL Policy</div>
+                <div role="columnheader" class="winner">SONIC</div>
+              </div>
+              <div class="compare-row" role="row">
+                <div class="dim" role="cell">Hand accuracy</div>
+                <div class="val" role="cell"><span class="meter hi"><i></i></span><span class="lbl">High</span></div>
+                <div class="val" role="cell"><span class="meter md"><i></i></span><span class="lbl">Medium</span></div>
+              </div>
+              <div class="compare-row" role="row">
+                <div class="dim" role="cell">Whole-body naturalness</div>
+                <div class="val" role="cell"><span class="meter lo"><i></i></span><span class="lbl">Low</span></div>
+                <div class="val" role="cell"><span class="meter hi"><i></i></span><span class="lbl">High</span></div>
+              </div>
+              <div class="compare-row" role="row">
+                <div class="dim" role="cell">Balance during manipulation</div>
+                <div class="val" role="cell"><span class="meter lo"><i></i></span><span class="lbl">Weak</span></div>
+                <div class="val" role="cell"><span class="meter md"><i></i></span><span class="lbl">Better</span></div>
+              </div>
+              <div class="compare-row" role="row">
+                <div class="dim" role="cell">Suitability for data collection</div>
+                <div class="val" role="cell"><span class="meter lo"><i></i></span><span class="lbl">Risky</span></div>
+                <div class="val" role="cell"><span class="meter hi"><i></i></span><span class="lbl">Promising</span></div>
+              </div>
+            </div>
+
+            <div class="block is-decision">
+              <span class="b-label">Decision</span>
+              Use <b>SONIC</b> as the current main whole-body teleoperation direction for data collection.
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 9 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 9</span>
+          <span class="week-range">Collecting</span>
+          <span class="week-tag">first-person demos</span>
+          <span class="node is-active"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">First-person <em>VLA data collection</em></h2>
+              <span class="badge is-active"><span class="b-dot"></span>Data collecting</span>
+            </header>
+            <ul class="points">
+              <li>Target data: human teleoperation command + <b>first-person visual observations</b>.</li>
+              <li>Goal scope: <b>~300 trajectories</b> to fine-tune a locomotion + manipulation policy.</li>
+            </ul>
+            <div class="media two">
+              <figure>
+                <div class="frame">
+                  <video src="assets/week_9/data_collection.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>Third-person · session view</figcaption>
+              </figure>
+              <figure>
+                <div class="frame">
+                  <video src="assets/week_9/fpv_data_collection.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>First-person · onboard camera</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 10 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 10</span>
+          <span class="week-range">Camera</span>
+          <span class="week-tag">OAK switch</span>
+          <span class="node is-done"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">New camera for <em>humanoid VLA</em></h2>
+              <span class="badge is-done"><span class="b-dot"></span>Purchase done</span>
+            </header>
+            <ul class="points">
+              <li>G1 humanoid onboard camera (<b>RealSense 435</b>) has a <b>narrow field of view</b>.</li>
+              <li>Switch to <b>OAK camera</b>.</li>
+              <li>Recent egocentric datasets for humanoid VLA pretraining, such as <b>EgoScale</b>, use the OAK camera.</li>
+            </ul>
+            <div class="media">
+              <figure>
+                <div class="frame wide">
+                  <video src="assets/week_10/camera.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>EgoScale dataset · OAK-camera egocentric capture</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ SUMMARY ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Summary</span>
+          <span class="week-range">Summary</span>
+          <span class="week-tag">timeline takeaway</span>
+          <span class="node is-summary"></span>
+        </div>
+        <div class="card-wrap" style="padding-bottom:0">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Timeline summary</h2>
+              <span class="badge is-current"><span class="b-dot"></span>Takeaway</span>
+            </header>
+            <ol class="summary-list">
+              <li><b>Upper-body teleoperation works</b> in simulation and on the real G1.</li>
+              <li><b>Whole-body teleoperation is necessary</b> for loco-manipulation VLA training.</li>
+              <li>IK + RL was tested but is <b>not reliable enough</b> as the main data-collection method.</li>
+              <li><b>SONIC is the current main direction</b> — more natural whole-body motion, better suited to coordinated demonstrations.</li>
+              <li><b>Hardware reliability remains a real constraint</b>; robot damage was incurred during earlier collection runs.</li>
+              <li><b>Camera upgrade to OAK</b> aligns the onboard view with recent humanoid VLA pretraining datasets (e.g. EgoScale).</li>
+            </ol>
+          </article>
+        </div>
+      </div>
+
+      <span class="rail-cap">End · Week 10</span>
+    </section>
+
+  </main>
+</body>
+</html>
