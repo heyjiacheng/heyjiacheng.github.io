@@ -600,8 +600,8 @@
       </div>
       <div class="meta">
         <div><b>Platform</b><br/>Unitree G1 (humanoid)</div>
-        <div style="margin-top:10px"><b>Window</b><br/>Weeks 1–10</div>
-        <div style="margin-top:10px"><b>Status</b><br/>Data collection · ongoing</div>
+        <div style="margin-top:10px"><b>Window</b><br/>Weeks 1–12</div>
+        <div style="margin-top:10px"><b>Status</b><br/>VLA policy deployed · scaling up</div>
       </div>
     </header>
 
@@ -983,6 +983,76 @@
         </div>
       </div>
 
+      <!-- ============ WEEK 11 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 11</span>
+          <span class="week-range">Lower locked</span>
+          <span class="week-tag">upper-body data only</span>
+          <span class="node is-risk"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Lock lower body, <em>collect data</em></h2>
+              <span class="badge is-risk"><span class="b-dot"></span>Hardware risk</span>
+            </header>
+            <ul class="points">
+              <li>Humanoid keeps warning <b>right ankle overheating</b> after ~5 minutes of walking.</li>
+              <li>Workaround: <b>lock the lower body</b> and continue collecting upper-body manipulation data.</li>
+              <li>New right humanoid leg has shipped from Hong Kong — <b>ETA ~3 weeks</b>.</li>
+            </ul>
+            <div class="media">
+              <figure>
+                <div class="frame contain" style="aspect-ratio: 4 / 5;">
+                  <video src="assets/week_11/collect_data_crop.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>Upper-body-only data collection · lower body suspended</figcaption>
+              </figure>
+            </div>
+            <div class="block is-risk">
+              <span class="b-label">Risk</span>
+              Right ankle thermal warning blocks safe walking; downstream loco-manipulation collection is paused until the replacement leg arrives.
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ WEEK 12 ============ -->
+      <div class="row">
+        <div class="axis">
+          <span class="week-num">Week 12</span>
+          <span class="week-range">Psi0 VLA</span>
+          <span class="week-tag">policy deployed</span>
+          <span class="node is-done"></span>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <header class="card-head">
+              <h2 class="card-title">Psi0 <em>VLA policy</em> works</h2>
+              <span class="badge is-done"><span class="b-dot"></span>Done</span>
+            </header>
+            <ul class="points">
+              <li>Successfully <b>fine-tuned and deployed Psi0 VLA</b> for upper-body manipulation on G1.</li>
+              <li>Fully autonomous, <b>no teleoperation</b> — the policy drives the arms directly from on-board observations.</li>
+              <li>Next step: train on more ambitious tasks using the <b>Berzelius</b> supercomputer.</li>
+            </ul>
+            <div class="media">
+              <figure>
+                <div class="frame contain" style="aspect-ratio: 4 / 5;">
+                  <video src="assets/week_12/psi0_policy_crop.mp4" autoplay muted loop playsinline></video>
+                </div>
+                <figcaption>Psi0 policy rollout · autonomous, no teleoperation</figcaption>
+              </figure>
+            </div>
+            <div class="block is-note">
+              <span class="b-label">Milestone</span>
+              First end-to-end VLA policy running on the G1 from collected demonstrations — validates the data-collection pipeline from Weeks 1–11.
+            </div>
+          </article>
+        </div>
+      </div>
+
       <!-- ============ SUMMARY ============ -->
       <div class="row">
         <div class="axis">
@@ -1004,12 +1074,14 @@
               <li><b>SONIC is the current main direction</b> — more natural whole-body motion, better suited to coordinated demonstrations.</li>
               <li><b>Hardware reliability remains a real constraint</b>; robot damage was incurred during earlier collection runs.</li>
               <li><b>Camera upgrade to OAK</b> aligns the onboard view with recent humanoid VLA pretraining datasets (e.g. EgoScale).</li>
+              <li><b>Right ankle thermal issue</b> forced a temporary lock of the lower body; replacement leg in shipping (Week 11).</li>
+              <li><b>Psi0 VLA policy deployed</b> for upper-body manipulation — first autonomous rollout on G1 from collected data (Week 12).</li>
             </ol>
           </article>
         </div>
       </div>
 
-      <span class="rail-cap">End · Week 10</span>
+      <span class="rail-cap">End · Week 12</span>
     </section>
 
   </main>
