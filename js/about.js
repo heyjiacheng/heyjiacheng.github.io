@@ -1,6 +1,6 @@
 function initAboutEmail() {
-  const user = "sage_cao";
-  const domain = "outlook.com";
+  const user = "jiacxu";
+  const domain = "kth.se";
   const email = `${user}@${domain}`;
   const mailto = `mailto:${email}`;
   const emailEl = document.getElementById("email");

@@ -484,11 +484,7 @@
       siteInitialized = true;
       scrollToInitialHash();
 
-      startPortfolioWarmup();
       loadFooterExtras();
-      loadPortfolioPartial().catch(function (err) {
-        console.error(err);
-      });
     } finally {
       siteInitializing = false;
     }
