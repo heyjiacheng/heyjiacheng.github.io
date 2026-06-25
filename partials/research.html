@@ -1,0 +1,41 @@
+﻿    <!--Research Section Start-->
+    <section
+      id="research"
+      class="research bg-gray pt-100 pb-50"
+      data-scroll-index="2">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="heading text-center">
+              <h2>My research</h2>
+            </div>
+          </div>
+        </div>
+
+        <div id="main-pub-container">
+          <h5 class="subtitle">
+              <strong>Publications</strong>
+              (
+                  <a id="publication-by-selected" href="javascript:;" onclick="publicationBySelected();">show selected</a> /
+                  <a id="publication-by-date" href="javascript:;" onclick="publicationByDate();">show all by date</a> /
+                  <a id="publication-by-topic" href="javascript:;" onclick="publicationByTopic();">show all by topic</a>
+              )
+          </h5>
+          <p class="subtitle-aux">
+              <span class="bold">Topics:</span>
+              <a href="#topic-robotics" onclick="return publicationByTopicSpecific(this)" data-topic="robotics">Robot Learning</a> /
+              <a href="#topic-generative-model" onclick="return publicationByTopicSpecific(this)" data-topic="generative-model">Generative Models</a> /
+              <a href="#topic-cognitive-model" onclick="return publicationByTopicSpecific(this)" data-topic="cognitive-model">Cognitive-inspired Models</a> /
+              <a href="#topic-others" onclick="return publicationByTopicSpecific(this)" data-topic="others">Others</a>
+              <br>
+              <span class="note">(* indicates equal contribution)</span>
+              </br>
+          </p>
+          
+
+          
+          <div id="main-pub-card-container" class="hide">
+          </div>
+        </div>
+      </div>
+    </section>

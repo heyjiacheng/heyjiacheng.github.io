@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A mathematical analysis of IDM-style, Single-backbone-style, and MoT-style World Model paradigms in robot learning."
+    />
+    <meta name="author" content="Jiahang Cao" />
+    <title>The Math Behind World Model Paradigms for Robot Learning</title>
+    <link href="../../data/洒1.ico" rel="icon" type="image/x-icon" />
+    <script type="module" crossorigin src="assets/main-frAv0iFn.js?v=20260622025702"></script>
+    <link rel="stylesheet" crossorigin href="assets/main-ByQ-DEM8.css">
+    <style>
+      .article-return {
+        position: relative;
+        z-index: 65;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        max-width: 1220px;
+        padding: 1.05rem 1.25rem 0;
+        font-family: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .article-return a {
+        color: #36586f;
+        font-size: 0.84rem;
+        font-weight: 720;
+        text-decoration: none;
+      }
+
+      .article-return a:hover {
+        color: #25231f;
+      }
+
+      .article-body .katex {
+        font-size: 1.12em;
+      }
+
+      .article-body .katex-display > .katex {
+        font-size: 1.14em;
+      }
+
+      .reference-copy .katex,
+      .citation-tooltip-copy .katex {
+        font-size: 1.06em;
+      }
+
+      html[lang="zh-CN"] .article-authors > span:nth-child(-n+4) {
+        font-weight: 800;
+      }
+
+      html[lang="zh-CN"] .article-authors > span:nth-child(-n+4) > span {
+        font-weight: inherit;
+      }
+
+      .article-footer .article-visitor-badge {
+        display: flex;
+        flex: 0 0 100%;
+        align-items: center;
+        justify-content: center;
+        margin: 0.12rem 0 0;
+        line-height: 1;
+        text-decoration: none;
+      }
+
+      .article-footer .article-visitor-badge img {
+        display: block;
+        width: 180px;
+        height: auto;
+        max-width: min(180px, 100%);
+      }
+
+      @media (max-width: 720px) {
+        .article-return {
+          padding-inline: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="article-return" aria-label="Article navigation">
+      <a href="../../#about">&larr; Return home</a>
+    </header>
+    <div id="root"></div>
+    <script>
+      (function () {
+        var badgeHref = "https://visitorbadge.io/status?path=https%3A%2F%2Fsagecao1125.github.io%2Fblog%2Fmath-of-world-model-paradigms%2F";
+        var badgeSrc = "https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fsagecao1125.github.io%2Fblog%2Fmath-of-world-model-paradigms%2F&countColor=%23263759";
+
+        function mountVisitorBadge() {
+          var footer = document.querySelector(".article-footer");
+          if (!footer || footer.querySelector(".article-visitor-badge")) {
+            return;
+          }
+          var badge = document.createElement("a");
+          badge.className = "article-visitor-badge";
+          badge.href = badgeHref;
+          badge.target = "_blank";
+          badge.rel = "noopener noreferrer";
+
+          var image = document.createElement("img");
+          image.src = badgeSrc;
+          image.alt = "Article visitor count";
+          image.loading = "lazy";
+          image.decoding = "async";
+
+          badge.appendChild(image);
+          footer.appendChild(badge);
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", mountVisitorBadge);
+        } else {
+          mountVisitorBadge();
+        }
+
+        var root = document.getElementById("root");
+        if (!root || typeof MutationObserver === "undefined") {
+          return;
+        }
+        var observer = new MutationObserver(mountVisitorBadge);
+        observer.observe(root, { childList: true, subtree: true });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,15 +1,9 @@
-_site
-.bundle
-.DS_store
-.idea
-.jekyll-cache
-.jekyll-metadata
-.ruby-version
-.sass-cache
-.tweet-cache
-.venv
-assets/libs/
-assets/rendercv/rendercv_output/*.typ
-Gemfile.lock
-node_modules/
-vendor
+# Local-only helper scripts and intermediate media outputs.
+/local_media_pipeline/
+/prompt/
+
+## other index files
+./index-2.html
+./blogs-page.html
+./index copy.html
+./index_debug.html
