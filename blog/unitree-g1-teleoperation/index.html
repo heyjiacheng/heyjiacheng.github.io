@@ -16,22 +16,6 @@
       href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [
-            ["$", "$"],
-            ["\\(", "\\)"],
-          ],
-          displayMath: [
-            ["$$", "$$"],
-            ["\\[", "\\]"],
-          ],
-        },
-        svg: { fontCache: "global" },
-      };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
     <style>
       :root {
         --paper: #f4f1ea;
@@ -827,7 +811,7 @@
         <div class="meta">
           <div><b>Platform</b><br />Unitree G1 (humanoid)</div>
           <div style="margin-top: 10px"><b>Window</b><br />Weeks 1–12</div>
-          <div style="margin-top: 10px"><b>Status</b><br />VLA policy deployed · scaling up</div>
+          <div style="margin-top: 10px"><b>Status</b><br />VLA policy deployed</div>
         </div>
       </header>
 
@@ -930,11 +914,7 @@
               </header>
               <ul class="points">
                 <li>
-                  Over the past two years, <b>VLA models</b> (such as the π-series) have shown promising results on both single-arm and dual-arm
-                  manipulation tasks.
-                </li>
-                <li>
-                  A growing research direction is to extend VLA from arm-centric manipulation to <b>humanoid whole-body control</b> (such as GR00T).
+                  Extend <b>VLA models</b> from arm-centric manipulation (π-series) to <b>humanoid whole-body control</b> (GR00T).
                 </li>
               </ul>
               <div class="media">
@@ -998,19 +978,8 @@
                 <div class="kv"><span class="k">Lower body</span><span class="v">pretrained RL locomotion policy</span></div>
               </div>
 
-              <div class="block">
-                <span class="b-label">Control objectives</span>
-                <div style="margin-top: 6px">
-                  AMO uses upper-body IK for sparse target tracking and a lower-body policy for locomotion: $$ (\mathbf{q}^{u}, \mathbf{c}) =
-                  \mathrm{IK}(\mathbf{x}^{\star}), \qquad \mathbf{a}^{l} = \pi^{l}(\mathbf{o}, \mathbf{v}^{\star}, \mathbf{c}). $$ Here,
-                  \(\mathbf{x}^{\star}\) are head/wrist target poses, \(\mathbf{q}^{u}\) upper-body joints, \(\mathbf{c}\) torso/height commands,
-                  \(\mathbf{o}\) proprioception, \(\mathbf{v}^{\star}\) target velocity, \(\pi^{l}\) the lower-body policy, and \(\mathbf{a}^{l}\)
-                  lower-body actions.
-                </div>
-              </div>
-
               <ul class="points">
-                <li>Under upper-body manipulation, the lower body <b>struggled to maintain balance</b>.</li>
+                <li>Accurate hand tracking, but <b>unnatural motion</b> — the lower body <b>struggled to maintain balance</b> during manipulation.</li>
                 <li><b>Robot damage</b> occurred during data collection runs.</li>
               </ul>
 
@@ -1023,14 +992,6 @@
                   <div class="frame"><img src="assets/week_5_6/robot_damage.jpg" alt="Hardware damage" /></div>
                   <figcaption>Hardware damage during teleoperation</figcaption>
                 </figure>
-              </div>
-
-              <div class="block is-note" style="margin-top: 18px">
-                <span class="b-label">Trade-off observed</span>
-                <div>
-                  <b style="color: var(--ink)">+ IK advantage</b> — better hand accuracy at the end-effector.<br />
-                  <b style="color: var(--ink)">− IK problem</b> — unnatural motion and poor stability during manipulation.
-                </div>
               </div>
 
               <div class="block is-decision">
@@ -1062,22 +1023,6 @@
                 <div class="kv"><span class="k">Input</span><span class="v">VR device motion / VLA command</span></div>
                 <div class="kv"><span class="k">Output</span><span class="v">coordinated full-body G1 motion</span></div>
               </div>
-
-              <div class="block">
-                <span class="b-label">Training objective</span>
-                <div style="margin-top: 6px">
-                  $$ \mathcal{L}_{\text{SONIC}} = \mathcal{L}_{\text{RL}} + \mathcal{L}_{\text{recon}} + \mathcal{L}_{\text{token}} +
-                  \mathcal{L}_{\text{cycle}}, $$ where $\mathcal{L}_{\text{RL}}$ is the PPO surrogate that trains physically stable motion tracking,
-                  $\mathcal{L}_{\text{recon}}$ reconstructs robot motion from the learned tokens, $\mathcal{L}_{\text{token}}$ aligns human and robot
-                  motion tokens, and $\mathcal{L}_{\text{cycle}}$ enforces cross-embodiment consistency.
-                </div>
-              </div>
-
-              <ul class="points">
-                <li>Produces <b>more natural</b> whole-body motion than IK.</li>
-                <li><b>Better balance</b> during manipulation.</li>
-                <li>Main limitation: hand / end-effector accuracy is <b>lower than IK</b>.</li>
-              </ul>
 
               <div class="media" style="grid-template-columns: 1fr 1fr 1fr">
                 <figure>
@@ -1204,9 +1149,8 @@
                 <span class="badge is-done"><span class="b-dot"></span>Purchase done</span>
               </header>
               <ul class="points">
-                <li>G1 humanoid onboard camera (<b>RealSense 435</b>) has a <b>narrow field of view</b>.</li>
-                <li>Switch to <b>OAK camera</b>.</li>
-                <li>Recent egocentric datasets for humanoid VLA pretraining, such as <b>EgoScale</b>, use the OAK camera.</li>
+                <li>Onboard <b>RealSense 435</b> has a <b>narrow field of view</b>.</li>
+                <li>Switched to the <b>OAK camera</b>, used by recent egocentric humanoid VLA datasets such as <b>EgoScale</b>.</li>
               </ul>
               <div class="media">
                 <figure>
@@ -1247,10 +1191,6 @@
                   <figcaption>Upper-body-only data collection · lower body suspended</figcaption>
                 </figure>
               </div>
-              <div class="block is-risk">
-                <span class="b-label">Risk</span>
-                Right ankle thermal warning blocks safe walking; downstream loco-manipulation collection is paused until the replacement leg arrives.
-              </div>
             </article>
           </div>
         </div>
@@ -1270,9 +1210,8 @@
                 <span class="badge is-done"><span class="b-dot"></span>Done</span>
               </header>
               <ul class="points">
-                <li>Successfully <b>fine-tuned and deployed Psi0 VLA</b> for upper-body manipulation on G1.</li>
+                <li><b>Fine-tuned and deployed Psi0 VLA</b> for upper-body manipulation on G1.</li>
                 <li>Fully autonomous, <b>no teleoperation</b> — the policy drives the arms directly from on-board observations.</li>
-                <li>Next step: train on more ambitious tasks using the <b>Berzelius</b> supercomputer.</li>
               </ul>
               <div class="media">
                 <figure>
@@ -1305,14 +1244,11 @@
                 <span class="badge is-current"><span class="b-dot"></span>Takeaway</span>
               </header>
               <ol class="summary-list">
-                <li><b>Upper-body teleoperation works</b> in simulation and on the real G1.</li>
-                <li><b>Whole-body teleoperation is necessary</b> for loco-manipulation VLA training.</li>
-                <li>IK + RL was tested but is <b>not reliable enough</b> as the main data-collection method.</li>
-                <li><b>SONIC is the current main direction</b> — more natural whole-body motion, better suited to coordinated demonstrations.</li>
-                <li><b>Hardware reliability remains a real constraint</b>; robot damage was incurred during earlier collection runs.</li>
-                <li><b>Camera upgrade to OAK</b> aligns the onboard view with recent humanoid VLA pretraining datasets (e.g. EgoScale).</li>
-                <li><b>Right ankle thermal issue</b> forced a temporary lock of the lower body; replacement leg in shipping (Week 11).</li>
-                <li><b>Psi0 VLA policy deployed</b> for upper-body manipulation — first autonomous rollout on G1 from collected data (Week 12).</li>
+                <li><b>SONIC is the main teleoperation direction</b> — IK + RL was tested first but proved unstable and damaged the robot.</li>
+                <li><b>Hardware reliability is the main constraint</b> — a right-ankle thermal issue currently limits collection to upper-body data.</li>
+                <li>
+                  <b>Psi0 VLA policy deployed</b> — first autonomous rollout on G1 from collected demonstrations, validating the full pipeline.
+                </li>
               </ol>
             </article>
           </div>

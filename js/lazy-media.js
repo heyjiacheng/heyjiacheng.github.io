@@ -1,5 +1,4 @@
 var lazyMediaObserver = null;
-var travelWarmStarted = false;
 
 function initLazyMedia() {
   if (!("IntersectionObserver" in window)) {
@@ -121,68 +120,4 @@ function schedulePublicationImageWarm(root, selectedOnly) {
   } else {
     setTimeout(run, 100);
   }
-}
-
-function getTravelLazyImages(root) {
-  var scope = root || document.getElementById("portfolio");
-  if (!scope) {
-    return [];
-  }
-  return Array.prototype.slice.call(
-    scope.querySelectorAll(".portfolio-group.robot img[data-src], .portfolio-group.robot img[src]")
-  );
-}
-
-function scheduleTravelImageWarm(root) {
-  if (travelWarmStarted) {
-    return;
-  }
-  var images = getTravelLazyImages(root);
-  if (!images.length) {
-    return;
-  }
-  travelWarmStarted = true;
-
-  var run = function () {
-    warmTravelImages(root);
-  };
-
-  if ("requestIdleCallback" in window) {
-    requestIdleCallback(run, { timeout: 250 });
-  } else {
-    setTimeout(run, 120);
-  }
-}
-
-function warmTravelImages(root) {
-  var images = getTravelLazyImages(root);
-  if (!images.length) {
-    return;
-  }
-
-  var index = 0;
-  var batchSize = 8;
-
-  function loadBatch() {
-    var count = 0;
-    while (index < images.length && count < batchSize) {
-      if (images[index].hasAttribute("data-src")) {
-        activateLazyImage(images[index]);
-      } else {
-        images[index].removeAttribute("loading");
-      }
-      index += 1;
-      count += 1;
-    }
-
-    if (index < images.length) {
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(loadBatch, { timeout: 250 });
-      } else {
-        setTimeout(loadBatch, 80);
-      }
-    }
-  }
-
-  loadBatch();
 }

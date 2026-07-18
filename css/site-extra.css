@@ -373,3 +373,22 @@ html.site-loading #footer {
     font-size: 16px;
   }
 }
+
+/* Cal.com "Book a Meeting" nav link */
+nav.navbar .nav-item .nav-link.nav-cal {
+  color: #ff9f43 !important;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+nav.navbar .nav-item .nav-link.nav-cal:before {
+  background-color: #ff9f43;
+}
+
+nav.fixed-top .nav-item .nav-link.nav-cal {
+  color: #e8590c !important;
+}
+
+nav.fixed-top .nav-item .nav-link.nav-cal:before {
+  background-color: #e8590c;
+}
