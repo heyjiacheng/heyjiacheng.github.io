@@ -1610,7 +1610,7 @@ section.banner-blog .banner-caption h1 {
 
 /*============ 15. Mobile Responsive  ============*/
 
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 767.98px) {
     .navbar-collapse {
         text-align: center;
         background-color: rgba(34, 34, 34, 0.9);
@@ -1626,6 +1626,9 @@ section.banner-blog .banner-caption h1 {
     .fixed-top .navbar-collapse {
         background-color: transparent;
     }
+}
+
+@media screen and (max-width: 991px) {
     .banner .banner-caption h1 {
         font-size: 75px;
     }
