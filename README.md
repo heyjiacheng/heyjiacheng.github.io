@@ -15,7 +15,7 @@ python3 -m http.server 8000
 One-time setup: `npm install`
 
 ```bash
-npm run new -- my-post-slug   # creates blog/posts/my-post-slug/index.md (a draft)
+npm run new                   # creates blog/posts/<today>/index.md (a draft)
 npm run dev                   # live rebuild + preview at http://localhost:8000/blog/
 ```
 

@@ -363,6 +363,16 @@ function build() {
       }
     }
   }
+  // Remove pages generated earlier for posts that were since deleted or made drafts.
+  const live = new Set(posts.filter((p) => p.generated).map((p) => p.slug));
+  for (const entry of fs.readdirSync(blogDir, { withFileTypes: true })) {
+    const page = path.join(blogDir, entry.name, "index.html");
+    if (!entry.isDirectory() || live.has(entry.name) || !fs.existsSync(page)) continue;
+    if (fs.readFileSync(page, "utf8").includes(GENERATED_MARKER)) {
+      fs.rmSync(path.join(blogDir, entry.name), { recursive: true });
+      console.log(`Removed blog/${entry.name}/ (no longer a published post)`);
+    }
+  }
   writeIfChanged(path.join(blogDir, "index.html"), renderIndex(posts));
   writeIfChanged(path.join(blogDir, "feed.xml"), renderFeed(posts));
   writeIfChanged(path.join(root, "sitemap.xml"), renderSitemap(posts));
