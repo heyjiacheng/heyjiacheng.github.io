@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jiacheng Xu — Blog</title>
+    <link>https://heyjiacheng.github.io/blog/</link>
+    <atom:link href="https://heyjiacheng.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Technical notes and mathematical reflections on AI and robotics.</description>
+    <language>en</language>
+    <item>
+      <title>Unitree G1 Whole-Body Teleoperation &amp; Data Collection</title>
+      <link>https://heyjiacheng.github.io/blog/unitree-g1-teleoperation/</link>
+      <guid>https://heyjiacheng.github.io/blog/unitree-g1-teleoperation/</guid>
+      <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A weeks 1–12 engineering log on the Unitree G1 humanoid: VR teleoperation, comparing IK + RL against a SONIC whole-body policy, hardware setbacks, and a first autonomous Psi0 VLA policy deployed from the collected demonstrations.</description>
+    </item>
+    <item>
+      <title>The Math Behind World Model Paradigms for Robot Learning</title>
+      <link>https://heyjiacheng.github.io/blog/math-of-world-model-paradigms/</link>
+      <guid>https://heyjiacheng.github.io/blog/math-of-world-model-paradigms/</guid>
+      <pubDate>Fri, 19 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A mathematical analysis of IDM-style, Single-backbone-style, and MoT-style world-model paradigms in robot learning from the perspectives of probabilistic modeling, structured optimization, gradient conflict, and parameter coupling.</description>
+    </item>
+  </channel>
+</rss>

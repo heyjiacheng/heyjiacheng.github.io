@@ -1,0 +1,18 @@
+{
+  "name": "heyjiacheng-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-blog.mjs",
+    "dev": "node scripts/build-blog.mjs --watch",
+    "new": "node scripts/new-post.mjs"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.12.0",
+    "katex": "^0.18.9",
+    "marked": "^18.0.14",
+    "marked-highlight": "^2.2.4",
+    "marked-katex-extension": "^5.1.13"
+  }
+}
