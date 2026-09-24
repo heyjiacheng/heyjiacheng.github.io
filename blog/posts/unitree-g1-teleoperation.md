@@ -1,10 +1,10 @@
 ---
 # Hand-designed page lives at blog/unitree-g1-teleoperation/index.html.
 # `page` means: list this post, but don't generate its HTML.
-title: Unitree G1 Whole-Body Teleoperation & Data Collection
+title: Unitree G1 - Whole-body Control
 date: 2026-06-25
-summary: "A weeks 1–12 engineering log on the Unitree G1 humanoid: VR teleoperation, comparing IK + RL against a SONIC whole-body policy, hardware setbacks, and a first autonomous Psi0 VLA policy deployed from the collected demonstrations."
+summary: "From VR teleoperation to an autonomous, language-conditioned VLA policy on the Unitree G1 humanoid: teleop, IK + RL vs. SONIC, data collection, and a deployed Psi0 policy."
 tags: [Robotics, Humanoid, Teleoperation, VLA]
-readingTime: 10
+readingTime: 2
 page: unitree-g1-teleoperation/
 ---

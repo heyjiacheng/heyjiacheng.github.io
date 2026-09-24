@@ -7,11 +7,11 @@
     <description>Technical notes and mathematical reflections on AI and robotics.</description>
     <language>en</language>
     <item>
-      <title>Unitree G1 Whole-Body Teleoperation &amp; Data Collection</title>
+      <title>Unitree G1 - Whole-body Control</title>
       <link>https://heyjiacheng.github.io/blog/unitree-g1-teleoperation/</link>
       <guid>https://heyjiacheng.github.io/blog/unitree-g1-teleoperation/</guid>
       <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
-      <description>A weeks 1–12 engineering log on the Unitree G1 humanoid: VR teleoperation, comparing IK + RL against a SONIC whole-body policy, hardware setbacks, and a first autonomous Psi0 VLA policy deployed from the collected demonstrations.</description>
+      <description>From VR teleoperation to an autonomous, language-conditioned VLA policy on the Unitree G1 humanoid: teleop, IK + RL vs. SONIC, data collection, and a deployed Psi0 policy.</description>
     </item>
     <item>
       <title>The Math Behind World Model Paradigms for Robot Learning</title>
