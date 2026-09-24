@@ -17,19 +17,6 @@ html.site-loading #footer {
   text-decoration: none;
 }
 
-.recruiting-banner {
-  margin-top: 8px;
-  padding: 6px 10px;
-  border-left: 4px solid #ff4d4f;
-  background: rgba(255, 77, 79, 0.08);
-  border-radius: 4px;
-}
-
-.recruiting-banner .recruiting-title {
-  color: #ff4d4f;
-  font-weight: 700;
-}
-
 .office-hours-banner {
   margin-top: 8px;
   padding: 6px 10px;
